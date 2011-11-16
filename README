@@ -1,0 +1,20 @@
+
+HIGH DIMENSIONAL DATA VISUALIZER
+	
+	Allows you to see 2 dimensional slices of arbitrarily high dimensional data.
+	Helps you to find interesting slices.
+	Data points are retrieved from a service as needed and cached.
+	
+	
+INSTALLATION
+
+	Dependencies
+		Python 2.6 or 2.7
+		PyQT4
+		Numpy
+
+
+USAGE
+
+	Start application with
+		python main.py
