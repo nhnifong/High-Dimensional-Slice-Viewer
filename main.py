@@ -57,7 +57,6 @@ class SliceView(QtGui.QWidget):
 		# init some variables needed by the iterative refinement
 		self.timetopaint = time()
 		self.numdp = 0
-		self.countdown = None
 		
 		# start the code!
 		self.roxtimer.start(0)
@@ -66,35 +65,36 @@ class SliceView(QtGui.QWidget):
 		w = self.size().width()
 		h = self.size().height()
 		
-		# investigste one new data point
-		pixelX = randint(0,w)
-		pixelY = randint(0,h)
-		dat = random()
-		color = self.colorRamp(dat)
-		self.numdp += 1
-		
-		# size of the box we will draw around this data point is equal to the area of the
-		# widget divided by the number of total data points already drawn including this one.
-		sqside = int(((w*h)/self.numdp)**0.5)
-		
-		# termination condition, once the size of the squares drawn is 1px, draw only w*h*2 more
-		if sqside==0:
-			if self.countdown==None:
-				self.countdown = w*h*2
-			elif self.countdown > 0:
-				self.countdown -= 1
-			else:
-				self.roxtimer.stop()
-				self.repaint()
-			
 		
 		qp = QtGui.QPainter()
 		qp.begin(self.pixmap)
-		qp.setPen(color)
-		qp.setBrush(color)
-		qp.drawRect(pixelX-sqside//2, pixelY-sqside//2, sqside, sqside)
-		qp.end()
+		qp.setRenderHint(qp.Antialiasing,True)
 		
+		# investigste n new data points
+		for n in range(20):
+		
+			pixelX = random()*w
+			pixelY = random()*h
+			dat = random()
+			color = self.colorRamp(dat)
+			self.numdp += 1
+			
+			# size of the box we will draw around this data point is equal to the area of the
+			# widget divided by the number of total data points already drawn including this one.
+			sqside = (float(w*h)/self.numdp)**0.5
+			
+			# termination condition, once the size of the squares drawn is 1px, draw only w*h*2 more
+			if sqside < 0.25:
+				self.roxtimer.stop()
+				self.repaint()
+			
+			
+			qp.setPen(color)
+			qp.setBrush(color)
+			qp.drawRect(QtCore.QRectF(pixelX-sqside*0.5, pixelY-sqside*0.5, sqside, sqside))
+		
+		
+		qp.end()
 		
 		if self.timetopaint <= time():
 			self.timetopaint = time() + 0.03
