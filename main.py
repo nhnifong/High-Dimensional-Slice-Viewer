@@ -1,7 +1,7 @@
 #!/usr/bin/env python
  
 import sys
-from PyQt4 import Qt, QtGui
+from PyQt4 import Qt, QtGui, QtCore
 from time import time
 
 
@@ -31,21 +31,39 @@ class SliceView(QtGui.QWidget):
 	def __inti__(self, parent=None):
 		super(SliceView, self).__inti__(parent)
 		self.parent = parent
-		
+		self.pixmap = None
+		self.roxtimer = None
 		
 	def paintEvent(self, event):
-		# keep this function under 30ms
-		w = self.size().width()
-		h = self.size().height()
+		""" This should return immediately duh
+			Draw the pixmap the worker threads have been working on.
+		"""
+		print time(),"painting"
 		qp = QtGui.QPainter()
 		qp.begin(self)
-		qp.setPen(QtGui.QColor(255, 100, 23))
-		qp.setBrush(QtGui.QColor(255, 255, 184))
-		qp.drawRect(0, 0, w-1, h-1)
-		
-		print time()
-		
+		if self.pixmap!=None:
+			qp.drawPixmap(0, 0, self.pixmap)
 		qp.end()
+		
+	def restartRox(self):
+		""" This method restarts the iterative refinement of the slice image
+		It should be called whenever the slice-defining parameters change,
+		and whenever the size of the slice view widget changes.
+		should return immediately.
+		"""
+		print "Say what again mothafucka I dare you!"
+		self.roxtimer = QtCore.QTimer(self)
+		self.connect(self.roxtimer, Qt.SIGNAL("timeout()"), self.addDetail);
+		self.roxtimer.start(1000)
+		
+	def addDetail(self):
+		print "What?"
+		
+	def resizeEvent(self, event):
+		print time(),"resizing"
+		self.pixmap = QtGui.QPixmap(event.size().width(), event.size().height())
+		self.restartRox()
+		
 
 
 app = Qt.QApplication(sys.argv)
