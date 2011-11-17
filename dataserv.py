@@ -2,15 +2,16 @@
 from __future__ import division
 import numpy as np
 from math import e,sin,cos
+from scipy.spatial import KDTree
 
 def sigmoid(x):
 	return 1/(1+e**(-x))
 	
 class NumpyDataService:
 	def __init__(self):
-		#self.data = np.fromfile("test.nparray",np.dtype('float64'))
-		#self.data.shape = (5,2084800)
-		pass
+		self.data = np.fromfile("small.nparray",np.dtype('float64'))
+		self.data.shape = (40000, 5)
+		self.xykdtree = KDTree(self.data[:,:2])
 		
 	def getDimensionality(self):
 		#return self.data.shape[0]
@@ -31,11 +32,11 @@ class NumpyDataService:
 		
 		"""
 		
-		for i in range(5):
-			if vec[i] == None:
-				vec[i] = 0.5
-			
-		for i in range(5):
-			vec[i] = sigmoid((sin(vec[0]*20)+cos(vec[1]*30)))
+		# whoa dude
+		#for i in range(5):
+		#	vec[i] = sigmoid((sin(vec[0]*20)+cos(vec[1]*30)))
+		
+		ans = self.xykdtree.query(vec[:2])
+		vec = self.data[ans[1]]
 			
 		return vec

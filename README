@@ -3,7 +3,7 @@ HIGH DIMENSIONAL DATA VISUALIZER
 	
 	Allows you to see 2 dimensional slices of arbitrarily high dimensional data.
 	Helps you to find interesting slices.
-	Data points are retrieved from a service as needed and cached.
+	Data points are retrieved from a service as needed.
 	
 	
 INSTALLATION
@@ -12,6 +12,7 @@ INSTALLATION
 		Python 2.6 or 2.7
 		PyQT4
 		Numpy
+		Scipy
 
 
 USAGE
