@@ -3,7 +3,7 @@ from __future__ import division
 import sys
 from PyQt4 import Qt, QtGui, QtCore
 from time import time
-from random import randint,random
+from random import randint,random,shuffle
 from dataserv import NumpyDataService
 
 class HDSV_Main(QtGui.QWidget):
@@ -44,6 +44,8 @@ class SliceView(QtGui.QWidget):
 		# the list of dimensions in the HD space that each of the following
 		# variables (x,y,r,g,b) is mapped to
 		self.dim = [0,1,2,3,4]
+		shuffle(self.dim)
+		self.dataService.setKeyDimensions(self.dim[:2])
 		# the slope of the view in each of the possible source dimensions (NYI)
 		self.slope = [1.0]*self.sourceDimensionality
 		

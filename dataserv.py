@@ -11,11 +11,15 @@ class NumpyDataService:
 	def __init__(self):
 		self.data = np.fromfile("small.nparray",np.dtype('float64'))
 		self.data.shape = (40000, 5)
-		self.xykdtree = KDTree(self.data[:,:2])
+		self.keys  = [0,1]
 		
 	def getDimensionality(self):
-		#return self.data.shape[0]
-		return 5
+		return self.data.shape[0]
+		
+	def setKeyDimensions(self,keydims):
+		# rebuild the kdtree on only the key dimensions
+		self.kdtree = KDTree(self.data[:,keydims])
+		self.keys = keydims
 		
 	def resolve(self,vec,requested):
 		""" vec will be a vector with missing data [0.44, None, None 0.01, None] of the same
@@ -36,7 +40,10 @@ class NumpyDataService:
 		#for i in range(5):
 		#	vec[i] = sigmoid((sin(vec[0]*20)+cos(vec[1]*30)))
 		
-		ans = self.xykdtree.query(vec[:2])
+		needed = [vec[k] for k in self.keys]
+		assert (None not in needed)
+		
+		ans = self.kdtree.query(needed)
 		vec = self.data[ans[1]]
 			
 		return vec
